@@ -1,14 +1,161 @@
 "use client";
 
 import React from "react";
-import HorizontalSlider from "@/components/ui/HorizontalSlider";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
-function Card({ title, children, isVisible }: { title: string; children: React.ReactNode; isVisible: boolean }) {
+// Icons for each section
+const WorkIcon = () => (
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+  </svg>
+);
+
+const EducationIcon = () => (
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+  </svg>
+);
+
+const CertificationIcon = () => (
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+  </svg>
+);
+
+function Card({ 
+  title, 
+  icon: Icon, 
+  children, 
+  isVisible, 
+  gradient = "from-blue-500/20 to-cyan-500/20"
+}: { 
+  title: string; 
+  icon: React.ComponentType; 
+  children: React.ReactNode; 
+  isVisible: boolean;
+  gradient?: string;
+}) {
   return (
-    <div className={`inline-flex flex-col justify-start w-full sm:w-[420px] md:w-[520px] max-w-[92vw] min-h-[240px] glass no-shadow rounded-3xl md:rounded-[48px] px-5 py-5 md:px-8 md:py-8 transition-all duration-1000 will-change-transform ${isVisible ? 'animate-fade-in-up' : 'opacity-0 translate-y-6 sm:translate-y-8 scale-[0.98] sm:scale-95'}`}>
-      <div className="text-white/90 text-xl md:text-2xl font-semibold mb-3 md:mb-4 text-center tracking-tight title-glow animate-title-glow">{title}</div>
-      {children}
+    <div className={`glass no-shadow rounded-3xl md:rounded-[48px] transition-all duration-700 will-change-transform relative overflow-hidden ${isVisible ? 'animate-fade-in-up' : 'opacity-0 translate-y-6 sm:translate-y-8 scale-[0.98] sm:scale-95'}`}>
+      {/* Background gradient overlay */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-30 transition-opacity duration-500`} />
+      
+      {/* Header with icon and title */}
+      <div className="relative z-10 flex items-center justify-center gap-3 p-6 md:p-8">
+        <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20">
+          <Icon />
+        </div>
+        <h3 className="text-white/90 text-xl md:text-2xl font-semibold tracking-tight">
+          {title}
+        </h3>
+      </div>
+      
+      {/* Content - Always visible */}
+      <div className="relative z-10 px-6 md:px-8 pb-6 md:pb-8">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function ExperienceItem({ 
+  role, 
+  company, 
+  period, 
+  description, 
+  isVisible, 
+  delay 
+}: { 
+  role: string; 
+  company: string; 
+  period: string; 
+  description: string;
+  isVisible: boolean;
+  delay: number;
+}) {
+  return (
+    <div 
+      className={`group transition-all duration-500 ${isVisible ? 'animate-fade-in-up' : 'opacity-0 translate-y-4'}`}
+      style={{ animationDelay: `${delay}ms` }}
+    >
+      <div className="p-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 group-hover:scale-[1.02] mb-4">
+        <div className="flex items-start justify-between mb-3">
+          <div className="flex-1">
+            <h4 className="font-semibold text-white/90 text-lg mb-1">{role}</h4>
+            <p className="text-[#A5C9CA] font-medium">{company}</p>
+          </div>
+          <span className="text-xs text-white/60 bg-white/10 px-3 py-1 rounded-full border border-white/20">
+            {period}
+          </span>
+        </div>
+        <p className="text-white/70 text-sm leading-relaxed">{description}</p>
+      </div>
+    </div>
+  );
+}
+
+function CertificationItem({ 
+  title, 
+  issuer, 
+  year, 
+  link, 
+  isVisible, 
+  delay 
+}: { 
+  title: string; 
+  issuer: string; 
+  year: string; 
+  link?: string;
+  isVisible: boolean;
+  delay: number;
+}) {
+  const content = (
+    <div className="p-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 group-hover:scale-[1.02] mb-4">
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex-1">
+          <h4 className="font-semibold text-white/90 text-lg mb-1">{title}</h4>
+          <p className="text-[#A5C9CA] font-medium">{issuer}</p>
+        </div>
+        <span className="text-xs text-white/60 bg-white/10 px-3 py-1 rounded-full border border-white/20">
+          {year}
+        </span>
+      </div>
+      {link && (
+        <div className="flex items-center gap-2 text-[#A5C9CA] text-sm">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+          <span>View Certificate</span>
+        </div>
+      )}
+    </div>
+  );
+
+  if (link) {
+    return (
+      <a 
+        href={link}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block"
+      >
+        <div 
+          className={`group cursor-pointer transition-all duration-500 ${isVisible ? 'animate-fade-in-up' : 'opacity-0 translate-y-4'}`}
+          style={{ animationDelay: `${delay}ms` }}
+        >
+          {content}
+        </div>
+      </a>
+    );
+  }
+
+  return (
+    <div 
+      className={`group transition-all duration-500 ${isVisible ? 'animate-fade-in-up' : 'opacity-0 translate-y-4'}`}
+      style={{ animationDelay: `${delay}ms` }}
+    >
+      {content}
     </div>
   );
 }
@@ -21,103 +168,81 @@ export default function Highlights() {
 
   return (
     <section ref={ref} className="container centered mt-14 md:mt-20">
-      <HorizontalSlider className="" itemGapClass="gap-5 md:gap-8" controls>
-        <Card title="Work Experiences" isVisible={isIntersecting}>
-          <div className="flex h-full flex-col justify-center">
-            {/* Top timeline: two circles connected */}
-            <div className="relative h-10 md:h-14 mb-2 hidden sm:block">
-              <div className="absolute left-[calc(18%+24px)] right-[calc(18%+24px)] top-1/2 -translate-y-1/2 h-[3px] rounded-full bg-white/45" />
-              <div className="absolute left-[18%] top-1/2 -translate-y-1/2 -translate-x-1/2 size-8 md:size-10 rounded-full border-4 border-white/60 bg-transparent" />
-              <div className="absolute right-[18%] top-1/2 -translate-y-1/2 translate-x-1/2 size-8 md:size-10 rounded-full border-4 border-white/60 bg-transparent" />
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6 md:gap-8 text-center">
-              <a
-                href="#"
-                aria-label="Lihat detail pengalaman Data Management di Telkom Akses"
-                className="block w-full rounded-2xl px-3 py-3 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 transition-colors pointer-events-auto"
-                onPointerDown={(e) => e.stopPropagation()}
-                onMouseDown={(e) => e.stopPropagation()}
-                onTouchStart={(e) => e.stopPropagation()}
-              >
-                <div className="flex flex-col items-center space-y-1">
-                  <div className="font-medium">Data Management</div>
-                  <div className="font-medium">Telkom Akses</div>
-                  <div className="text-xs sm:text-sm text-white/70">( May 2025 - Present )</div>
+      {/* Grid Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <Card 
+          title="Work Experience" 
+          icon={WorkIcon} 
+          isVisible={isIntersecting} 
+          gradient="from-emerald-500/20 to-teal-500/20"
+        >
+          <div className="space-y-2">
+            <ExperienceItem
+              role="Data Management"
+              company="Telkom Akses"
+              period="May 2025 - Present"
+              description="Managing and analyzing data infrastructure, optimizing database performance, and implementing data-driven solutions for business growth."
+              isVisible={isIntersecting}
+              delay={200}
+            />
+            <ExperienceItem
+              role="Frontend Intern"
+              company="Gikslab Indonesia"
+              period="Jul 2023 - Sep 2023"
+              description="Developed responsive web applications using React.js, collaborated with design team, and implemented modern UI/UX practices."
+              isVisible={isIntersecting}
+              delay={400}
+            />
+          </div>
+        </Card>
+
+        <Card 
+          title="Education" 
+          icon={EducationIcon} 
+          isVisible={isIntersecting} 
+          gradient="from-purple-500/20 to-pink-500/20"
+        >
+          <div className="text-center">
+            <div className="p-6 rounded-2xl border border-white/10 bg-white/5">
+              <h4 className="font-semibold text-white/90 text-xl mb-3">Telkom University</h4>
+              <p className="text-[#A5C9CA] font-medium mb-2">Bandung, Indonesia</p>
+              <div className="space-y-2 text-white/70">
+                <p className="text-lg">Bachelor of Informatics</p>
+                <div className="flex items-center justify-center gap-4">
+                  <span className="text-sm">GPA: <span className="text-[#A5C9CA] font-semibold">3.54/4.00</span></span>
+                  <span className="text-sm">2020 - 2024</span>
                 </div>
-              </a>
-              <a
-                href="#"
-                aria-label="Lihat detail pengalaman Frontend Intern di Gikslab Indonesia"
-                className="block w-full rounded-2xl px-3 py-3 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 transition-colors pointer-events-auto"
-                onPointerDown={(e) => e.stopPropagation()}
-                onMouseDown={(e) => e.stopPropagation()}
-                onTouchStart={(e) => e.stopPropagation()}
-              >
-                <div className="flex flex-col items-center space-y-1">
-                  <div className="font-medium">Frontend Intern</div>
-                  <div className="font-medium">Gikslab Indonesia</div>
-                  <div className="text-xs sm:text-sm text-white/70">( Jul 2023 - Sep 2023 )</div>
-                </div>
-              </a>
+              </div>
             </div>
           </div>
         </Card>
 
-        <Card title="Education" isVisible={isIntersecting}>
-          <div className="flex h-full flex-col items-center justify-center text-center space-y-1">
-            <div className="relative h-10 md:h-14 mb-2 w-full hidden sm:block">
-              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-8 md:size-10 rounded-full border-4 border-white/60 bg-transparent" />
-            </div>
-            <div className="text-center space-y-1">
-              <div className="font-medium">Telkom University - Bandung, Indonesia</div>
-              <div className="text-xs sm:text-sm text-white/70">Bachelor Informatics, 3.54/4.00</div>
-              <div className="text-xs sm:text-sm text-white/70">2020 - 2024</div>
-            </div>
-            
+        <Card 
+          title="Certifications" 
+          icon={CertificationIcon} 
+          isVisible={isIntersecting} 
+          gradient="from-orange-500/20 to-red-500/20"
+        >
+          <div className="space-y-2">
+            <CertificationItem
+              title="React dan Back-End"
+              issuer="Dicoding Indonesia"
+              year="2025"
+              link="https://drive.google.com/file/d/1ETPSaHbOXVk4gmojidxnb5Ny80UKtJST/view?usp=sharing"
+              isVisible={isIntersecting}
+              delay={200}
+            />
+            <CertificationItem
+              title="Frontend Developer Intern"
+              issuer="Gikslab Indonesia"
+              year="2023"
+              link="https://drive.google.com/file/d/1bFmWGTYOFwc8_gVv82DxE9HYswAEWbkF/view?usp=sharing"
+              isVisible={isIntersecting}
+              delay={400}
+            />
           </div>
         </Card>
-
-        <Card title="Certifications" isVisible={isIntersecting}>
-          <div className="flex h-full flex-col justify-center">
-            {/* Top timeline: two circles connected */}
-            <div className="relative h-10 md:h-14 mb-2 hidden sm:block">
-              <div className="absolute left-[calc(18%+24px)] right-[calc(18%+24px)] top-1/2 -translate-y-1/2 h-[3px] rounded-full bg-white/45" />
-              <div className="absolute left-[18%] top-1/2 -translate-y-1/2 -translate-x-1/2 size-8 md:size-10 rounded-full border-4 border-white/60 bg-transparent" />
-              <div className="absolute right-[18%] top-1/2 -translate-y-1/2 translate-x-1/2 size-8 md:size-10 rounded-full border-4 border-white/60 bg-transparent" />
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6 md:gap-8 text-center">
-              <a
-                href="https://drive.google.com/file/d/1ETPSaHbOXVk4gmojidxnb5Ny80UKtJST/view?usp=sharing"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Buka sertifikat Dicoding: React dan Back-End"
-                className="block w-full rounded-2xl px-3 py-3 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 transition-colors pointer-events-auto"
-                onPointerDown={(e) => e.stopPropagation()}
-                onMouseDown={(e) => e.stopPropagation()}
-                onTouchStart={(e) => e.stopPropagation()}
-              >
-                <div className="flex flex-col items-center space-y-1">
-                  <div className="font-medium">React dan Back-End Dicoding Certificate</div>
-                  <div className="text-xs sm:text-sm text-white/70">Dicoding Indonesia 2025</div>
-                </div>
-              </a>
-              <a
-                href="#"
-                aria-label="Buka sertifikat kedua"
-                className="block w-full rounded-2xl px-3 py-3 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 transition-colors pointer-events-auto"
-                onPointerDown={(e) => e.stopPropagation()}
-                onMouseDown={(e) => e.stopPropagation()}
-                onTouchStart={(e) => e.stopPropagation()}
-              >
-                <div className="flex flex-col items-center space-y-1">
-                  <div className="font-medium">Frontend Developer Intern</div>
-                  <div className="text-xs sm:text-sm text-white/70">( Jul 2023 - Sep 2023 )</div>
-                </div>
-              </a>
-            </div>
-          </div>
-        </Card>
-      </HorizontalSlider>
+      </div>
     </section>
   );
 }
