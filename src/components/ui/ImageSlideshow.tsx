@@ -32,13 +32,14 @@ export default function ImageSlideshow({ images, projectTitle }: ImageSlideshowP
     <div className="relative">
       {/* Main image container - unified layout for all project types */}
       <div className="relative aspect-[16/9] bg-white/10 rounded-2xl p-2 backdrop-blur-sm border border-white/10 overflow-hidden">
-        <div className="relative w-full h-full bg-white rounded-lg overflow-hidden">
+      <div className="relative w-full h-full bg-white rounded-lg overflow-hidden">
           <Image
             src={images[currentIndex]}
             alt={`${projectTitle} screenshot ${currentIndex + 1}`}
             fill
-            className="object-contain transition-all duration-500"
+            className="object-cover transition-all duration-500"
             quality={90}
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         </div>
       </div>

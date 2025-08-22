@@ -35,5 +35,17 @@ export const PROJECTS: Project[] = [
     type: "web",
     repoUrl: "https://github.com/CapstoneDi",
     demoUrl: "https://grup-capstonedb6-pg009.vercel.app/"
+  },
+  {
+    title: "Digi Invition",
+    subtitle: "Digi Invition",
+    description: "Digi Invition is a platform for creating and managing digital invitations for events, parties, and other occasions.",
+    images: [
+      "/projects/digi-invition.png"
+    ],
+    technologies: ["Next.js", "Typescript", "TailwindCSS"],
+    type: "mobile",
+    repoUrl: "https://github.com/rezamiaw/digi-invition",
+    demoUrl: "https://digi-invition.vercel.app/"
   }
 ];
