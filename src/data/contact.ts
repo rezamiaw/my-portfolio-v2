@@ -19,15 +19,15 @@ export const CONTACT_INFO: ContactInfo[] = [
     href: "https://github.com/rezamiaw"
   },
   {
-    title: "Location",
-    value: "Purwokerto, Indonesia",
-    icon: "📍"
-  },
-  {
     title: "LinkedIn",
     value: "linkedin.com/in/rezada",
     icon: "🔗",
     href: "https://linkedin.com/in/rezada"
+  },
+  {
+    title: "Location",
+    value: "Purwokerto, Indonesia",
+    icon: "📍"
   }
 ];
 
