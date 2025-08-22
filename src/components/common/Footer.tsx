@@ -30,7 +30,15 @@ export default function Footer() {
               © {currentYear} Reza Dwi Andrianto. All rights reserved.
             </p>
             <p className="text-white/40 text-xs mt-1">
-              Built with Next.js, React & Tailwind CSS
+              Built with Next.js, React & Tailwind CSS, designed by{" "}
+              <a
+                href="https://www.linkedin.com/in/anles/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#A5C9CA] hover:text-white transition-colors duration-300 underline decoration-dotted underline-offset-2"
+              >
+                @nisaalestr
+              </a>
             </p>
           </div>
 
